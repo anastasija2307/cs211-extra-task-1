@@ -94,7 +94,10 @@ double to_24_hour_clock(double hours)
         with integer and fractional part of a hours separately.
         
     */
-    return fmod(hours, 24.0);
+    double res = fmod(hours, 24.0);
+    if (res < 0)
+        res += 24.0;
+    return res;
 }
 
 /*
@@ -191,7 +194,7 @@ double time_from_utc(int utc_offset, double time)
         >>> time_from_utc(+1, 23.0)
         0.0
     */
-    return 0.0;
+    return to_24_hour_clock(time + utc_offset);
 }
 
 int main() {
@@ -231,4 +234,14 @@ int main() {
     assert(fabs(time_to_utc(-11, 18.0) - 5.0) < DBL_EPSILON);
     assert(fabs(time_to_utc(-1, 0.0) - 1.0) < DBL_EPSILON);
     assert(fabs(time_to_utc(-1, 23.0) - 0.0) < DBL_EPSILON);
+
+    //проверка фукции time_from_utc()
+    assert(fabs(time_from_utc(+0, 12.0) - 12.0) < DBL_EPSILON);
+    assert(fabs(time_from_utc(+1, 12.0) - 13.0) < DBL_EPSILON);
+    assert(fabs(time_from_utc(-1, 12.0) - 11.0) < DBL_EPSILON);
+    assert(fabs(time_from_utc(+6, 6.0) - 12.0) < DBL_EPSILON);
+    assert(fabs(time_from_utc(-7, 6.0) - 23.0) < DBL_EPSILON);
+    assert(fabs(time_from_utc(-1, 0.0) - 23.0) < DBL_EPSILON);
+    assert(fabs(time_from_utc(-1, 23.0) - 22.0) < DBL_EPSILON);
+    assert(fabs(time_from_utc(+1, 23.0) - 0.0) < DBL_EPSILON);
 }
