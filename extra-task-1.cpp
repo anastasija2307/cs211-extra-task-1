@@ -64,7 +64,7 @@ double to_float_hours(int hours, int minutes, int seconds)
         >>> to_float_hours(1, 0, 36)
         1.01
     */
-    return 0.0;
+    return hours + minutes / 60.0 + seconds / 3600.0;
 }
 
 double to_24_hour_clock(double hours)
@@ -192,5 +192,8 @@ int main() {
     assert(fabs(hours_difference(1800.0, 2160.0) - 0.1) < DBL_EPSILON);
     assert(fabs(hours_difference(1800.0, 1800.0) - 0.0) < DBL_EPSILON);
 
-
+    //проверка фукции to_float_hours()
+    assert(fabs(to_float_hours(0, 15, 0) - 0.25) < DBL_EPSILON);
+    assert(fabs(to_float_hours(2, 45, 9) - 2.7525) < DBL_EPSILON);
+    assert(fabs(to_float_hours(1, 0, 36) - 1.01) < DBL_EPSILON);
 }
